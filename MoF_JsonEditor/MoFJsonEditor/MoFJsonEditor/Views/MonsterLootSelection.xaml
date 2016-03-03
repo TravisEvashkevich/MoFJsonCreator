@@ -1,0 +1,127 @@
+﻿<Window x:Class="MoFJsonEditor.Views.MonsterLootSelection"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:models="clr-namespace:MoFJsonEditor.Models"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300" MaxWidth="500">
+    <Window.Resources>
+        <!--This is used to get the Equipment Enums and make them selectable in Comboboxes-->
+        <ObjectDataProvider x:Key="EquipmentEnum" MethodName="GetValues"
+                            ObjectType="{x:Type system:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="models:EquipmentType"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider x:Key="PotionEnum" MethodName="GetValues"
+                            ObjectType="{x:Type system:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="models:PotionType"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider x:Key="SortBy" MethodName="GetValues"
+                            ObjectType="{x:Type system:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="models:SortBy"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider x:Key="LootType" MethodName="GetValues"
+                            ObjectType="{x:Type system:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="models:LootType"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Menu Height="auto" Grid.Row="0"  Name="EquipmentMenu" >
+            <MenuItem Header="Equipment">
+                <MenuItem Header="Load Equipment" Command="{Binding CmdLoadLoot}"/>
+                <MenuItem Header="Save Equipment"   Command="{Binding CmdSaveEquipment}"/>
+            </MenuItem>
+        </Menu>
+        <StackPanel Grid.Row="1">
+            <StackPanel Orientation="Horizontal"  Margin="10">
+                <TextBlock Text="Sort By: "></TextBlock>
+                <ComboBox Width="100" ItemsSource="{Binding Source={StaticResource SortBy}}" 
+                          SelectedValue="{Binding SortByType,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="100,0,0,10">
+                <Button Content="Add Selected Equipment" Margin="5,0,5,0" Command="{Binding CmdAddLoot}"/>
+            </StackPanel>
+            <ListBox Grid.Row="1" x:Name="EquipmentListBox"  SelectedIndex="{Binding SelectedItem}" ItemsSource="{Binding SortedLoot}"
+                 MaxWidth="400"  MaxHeight="550" MinWidth="200" MinHeight="250" Margin="0,0,0,0" Height="500">
+                <ListBox.Resources>
+                    <DataTemplate DataType="{x:Type models:Equipment}">
+                        <Expander Header="{Binding Name, UpdateSourceTrigger=PropertyChanged}" >
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="Name"                  Margin="10,2,0,0" />
+                                    <TextBlock Text="Image Path"            Margin="10,2,0,0" />
+                                    <TextBlock Text="Sprite Name"           Margin="10,2,0,0" />
+                                    <TextBlock Text="Slot"                  Margin="10,2,0,0" />
+                                    <TextBlock Text="Low Sell Value"        Margin="10,2,0,0" />
+                                    <TextBlock Text="Max Sell Value"        Margin="10,2,0,0" />
+                                    <TextBlock Text="Low Melee"             Margin="10,2,0,0" />
+                                    <TextBlock Text="Max Melee"             Margin="10,2,0,0" />
+                                    <TextBlock Text="Low Magic"             Margin="10,2,0,0" />
+                                    <TextBlock Text="Max Magic"             Margin="10,2,0,0" />
+                                    <TextBlock Text="Low MeleeRes"          Margin="10,2,0,0" />
+                                    <TextBlock Text="Max MeleeRes"          Margin="10,2,0,0" />
+                                    <TextBlock Text="Low MagicRes"          Margin="10,2,0,0" />
+                                    <TextBlock Text="Max MagicRes"          Margin="10,2,0,0" />
+                                    <TextBlock Text="CurrentUpgradeLevel"   Margin="10,2,0,0" />
+                                    <TextBlock Text="MaxUpgradeLevel"       Margin="10,2,0,0" />
+                                </StackPanel>
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="{Binding Name}"/>
+                                    <TextBlock Text="{Binding ImagePath, UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"/>
+                                    <TextBlock Text="{Binding SpriteName, UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"/>
+                                    <TextBlock Text="{Binding Slot}"/>
+                                    <TextBlock Text="{Binding LowGold}" Width="50"/>
+                                    <TextBlock Text="{Binding MaxGold}" Width="50"/>
+                                    <TextBlock Text="{Binding LowMelee}" Width="50"/>
+                                    <TextBlock Text="{Binding MaxMelee}" Width="50"/>
+                                    <TextBlock Text="{Binding LowMagic}" Width="50"/>
+                                    <TextBlock Text="{Binding MaxMagic}" Width="50"/>
+                                    <TextBlock Text="{Binding LowMeleeResistance}" Width="50"/>
+                                    <TextBlock Text="{Binding MaxMeleeResistance}" Width="50"/>
+                                    <TextBlock Text="{Binding LowMagicResistance}" Width="50"/>
+                                    <TextBlock Text="{Binding MaxMagicResistance}" Width="50"/>
+                                    <TextBlock Text="{Binding CurrentUpgradeLevel}" Width="50"/>
+                                    <TextBlock Text="{Binding MaxUpgradeLevel}" Width="50"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Expander>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type models:Potion}">
+                        <Expander Header="{Binding Name}">
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Vertical" Margin="10">
+                                    <TextBlock Text="Potion Type"/>
+                                    <TextBlock Text="Potion Name"></TextBlock>
+                                    <TextBlock Text="Image Path"/>
+                                    <TextBlock Text="Sprite Name"/>
+                                    <TextBlock Text="Amount"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Vertical" Margin="10">
+                                    <TextBlock Text="{Binding PotionType}"></TextBlock>
+                                    <TextBlock Text="{Binding Name}"/>
+                                    <TextBlock Text="{Binding ImagePath}"/>
+                                    <TextBlock Text="{Binding SpriteName}"/>
+                                    <TextBlock Text="{Binding Amount}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Expander>
+                    </DataTemplate>
+                </ListBox.Resources>
+            </ListBox>
+        </StackPanel>
+    </Grid>
+</Window>
